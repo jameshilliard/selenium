@@ -46,15 +46,28 @@ jobs:
         with:
           command: build //rb:${{ matrix.target }}
 
-  chrome-test:
+  tests:
     if: ${{ needs.check_workflow.outputs.result == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(toJson(github.event.commits), '[run ruby]') == true }}
     needs: check_workflow
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        target: [ 'chrome-test', 'remote-chrome-test' ]
-        os: [ 'ubuntu-latest', 'windows-latest' ]
+        config:
+          - 'chrome'
+          - 'chrome --config remote'
+          - 'edge'
+          - 'edge --config remote'
+          - 'firefox'
+          - 'firefox --config remote'
+        os:
+          - 'ubuntu-latest'
+          - 'windows-latest'
+        exclude:
+          - config: edge
+            os: windows-latest
+          - config: edge --config remote
+            os: windows-latest
     steps:
       - name: Checkout source tree
         uses: actions/checkout@v3
@@ -67,89 +80,22 @@ jobs:
         uses: ./.github/actions/cache-bazel
         with:
           workflow: ruby
-          key: ${{ matrix.target }}
+          key: tests
       - name: Setup Fluxbox
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get -y install fluxbox
       - name: Setup Chrome
+        if: contains(matrix.config, 'chrome')
         uses: browser-actions/setup-chrome@latest
         with:
           chrome-version: stable
-      - name: Start XVFB
-        if: matrix.os == 'ubuntu-latest'
-        run: Xvfb :99 &
-      - name: Start Fluxbox
-        if: matrix.os == 'ubuntu-latest'
-        run: fluxbox -display :99 &
-      - name: Set resolution
-        if: matrix.os == 'windows-latest'
-        run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
-      - name: Run Chrome tests
-        uses: ./.github/actions/bazel
-        with:
-          command: test --cache_test_results=no --test_output=all //rb:${{ matrix.target }}
-          attempts: 3
-        env:
-          DISPLAY: :99
-
-  edge-test:
-    if: ${{ needs.check_workflow.outputs.result == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(toJson(github.event.commits), '[run ruby]') == true }}
-    needs: check_workflow
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [ 'edge-test', 'remote-edge-test' ]
-        os: [ 'windows-latest' ]
-    steps:
-      - name: Checkout source tree
-        uses: actions/checkout@v3
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: 'adopt'
-      - name: Cache Bazel artifacts
-        uses: ./.github/actions/cache-bazel
-        with:
-          workflow: ruby
-          key: ${{ matrix.target }}
       - name: Setup Edge
+        if: contains(matrix.config, 'edge')
         uses: browser-actions/setup-edge@latest
         with:
           edge-version: stable
-      - name: Run Edge tests
-        uses: ./.github/actions/bazel
-        with:
-          command: test --cache_test_results=no --test_output=all //rb:${{ matrix.target }}
-          attempts: 3
-
-  firefox-test:
-    if: ${{ needs.check_workflow.outputs.result == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(toJson(github.event.commits), '[run ruby]') == true }}
-    needs: check_workflow
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [ 'firefox-test', 'remote-firefox-test' ]
-        os: [ 'ubuntu-latest', 'windows-latest' ]
-    steps:
-      - name: Checkout source tree
-        uses: actions/checkout@v3
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: 'adopt'
-      - name: Cache Bazel artifacts
-        uses: ./.github/actions/cache-bazel
-        with:
-          workflow: ruby
-          key: ${{ matrix.target }}
-      - name: Setup Fluxbox
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get -y install fluxbox
       - name: Setup Firefox
+        if: contains(matrix.config, 'firefox')
         uses: abhi1693/setup-browser@v0.3.4
         with:
           browser: firefox
@@ -163,11 +109,10 @@ jobs:
       - name: Set resolution
         if: matrix.os == 'windows-latest'
         run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
-      - name: Run Firefox tests
+      - name: Run Chrome tests
         uses: ./.github/actions/bazel
         with:
-          command: test --cache_test_results=no --test_output=all //rb:${{ matrix.target }}
-          attempts: 3
+          command: test --config ${{ matrix.config }} --flaky_test_attempts 3 --cache_test_results=no --test_output=all rb/spec/integration/...
         env:
           DISPLAY: :99
 

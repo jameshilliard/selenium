@@ -27,7 +27,6 @@ module Selenium
           @create_driver_error = nil
           @create_driver_error_count = 0
 
-          populate_from_bazel_target
           WebDriver.logger
 
           @driver = ENV.fetch('WD_SPEC_DRIVER', :chrome).to_sym
@@ -236,21 +235,6 @@ module Selenium
 
         def safari_preview_driver(**opts)
           WebDriver::Driver.for(:safari, **opts)
-        end
-
-        def populate_from_bazel_target
-          name = ENV.fetch('TEST_TARGET', nil)
-          return unless name
-
-          case name
-          when %r{//rb:remote-(.+)-test}
-            ENV['WD_REMOTE_BROWSER'] = Regexp.last_match(1).tr('-', '_')
-            ENV['WD_SPEC_DRIVER'] = 'remote'
-          when %r{//rb:(.+)-test}
-            ENV['WD_SPEC_DRIVER'] = Regexp.last_match(1).tr('-', '_')
-          else
-            raise "Don't know how to extract browser name from #{name}"
-          end
         end
       end
     end # SpecSupport

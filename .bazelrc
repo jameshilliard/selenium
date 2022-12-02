@@ -62,8 +62,18 @@ build --test_env=PYTHON_VERSION
 build --test_env=RUBYOPT="-Irb/lib -w"
 
 # JRuby/TruffleRuby: https://github.com/jruby/jruby/issues/5661
+
 build --action_env=HOME
 test --test_env=HOME
+
+# Configurations for Ruby tests
+
+test:edge    --test_env=WD_SPEC_DRIVER="edge"    --test_env=WD_REMOTE_BROWSER="edge"
+test:chrome  --test_env=WD_SPEC_DRIVER="chrome"  --test_env=WD_REMOTE_BROWSER="chrome"
+test:ie      --test_env=WD_SPEC_DRIVER="ie"      --test_env=WD_REMOTE_BROWSER="ie"
+test:firefox --test_env=WD_SPEC_DRIVER="firefox" --test_env=WD_REMOTE_BROWSER="firefox"
+test:safari  --test_env=WD_SPEC_DRIVER="safari"  --test_env=WD_REMOTE_BROWSER="safari" --test_strategy=exclusive
+test:remote  --test_env=WD_SPEC_DRIVER="remote"
 
 test --test_timeout=1800
 
