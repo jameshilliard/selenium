@@ -1,0 +1,9 @@
+load("@rules_ruby//ruby:defs.bzl", "rb_test")
+
+rb_test(
+    name = "server",
+    srcs = ["server_spec.rb"],
+    args = ["rb/spec/unit/selenium/server_spec.rb"],
+    main = "@bundle//:bin/rspec",
+    deps = ["@bundle"],
+)

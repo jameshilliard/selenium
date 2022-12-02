@@ -241,7 +241,7 @@ task test_java_small_tests: [
   '//java/test/org/openqa/selenium/remote/server/log:test:run'
 ]
 
-task test_rb: ['//rb:unit-test', :test_rb_local, :test_rb_remote]
+task test_rb: ['//rb/spec/unit/...', :test_rb_local, :test_rb_remote]
 
 task test_rb_local: [
   '//rb:chrome-test',

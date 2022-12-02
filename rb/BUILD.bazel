@@ -472,35 +472,6 @@ rb_test(
 )
 
 rb_test(
-    name = "unit-test",
-    srcs = glob([
-        "spec/unit/selenium/webdriver/**/*_spec.rb",
-        "spec/unit/selenium/*_spec.rb",
-    ]),
-    args = [
-        "--format",
-        "documentation",
-        "--force-color",
-        "rb/spec",
-    ],
-    main = "@bundle//:bin/rspec",
-    tags = [
-        "no-sandbox",
-        "requires-network",
-    ],
-    deps = [
-        ":bidi",
-        ":chrome",
-        ":edge",
-        ":firefox",
-        ":ie",
-        ":remote",
-        ":safari",
-        "@bundle",
-    ],
-)
-
-rb_test(
     name = "remote-chrome-test",
     srcs = glob([
         "spec/integration/selenium/webdriver/*_spec.rb",

@@ -213,13 +213,13 @@ bazel build //rb/...
 To run unit tests:
 
 ```sh
-bazel test --cache_test_results=no --test_output=all //rb:unit-test
+bazel test --cache_test_results=no --test_output=all //rb/spec/unit/...
 ```
 
 To run tests on a browser:
 
 ```sh
-bazel test --cache_test_results=no --test_output=all //rb:<browsername>-test 
+bazel test --cache_test_results=no --test_output=all //rb:<browsername>-test
 ```
 
 To run remote tests on a browser:
@@ -247,7 +247,7 @@ _Test_Target_ examples:
 * Selenium::WebDriver::Timeouts
 * Selenium::WebDriver::Chrome::Driver
 * Selenium::WebDriver::Firefox::Profile
-* Selenium::Webdriver::Remote::Driver 
+* Selenium::Webdriver::Remote::Driver
 
 Optional Environment Variable toggles in test suite:
 
@@ -256,7 +256,7 @@ Optional Environment Variable toggles in test suite:
 - `ENV['WD_REMOTE_URL']` - url of an already running server to use for remote tests
 - `ENV['DOWNLOAD_SERVER']` - when `WD_REMOTE_URL` not set; whether to download and use most recently released server version for remote tests
 - `ENV['DEBUG']` - turns on verbose debugging
-- `ENV['HEADLESS']` - for chrome, edge and firefox; runs tests in headless mode 
+- `ENV['HEADLESS']` - for chrome, edge and firefox; runs tests in headless mode
 - `ENV['DISABLE_BUILD_CHECK']` - for chrome and edge; whether to ignore driver and browser version mismatches (allows testing Canary builds)
 - `ENV['CHROME_BINARY']` - path to test specific Chrome browser
 - `ENV['EDGE_BINARY']` - path to test specific Edge browser
@@ -264,7 +264,7 @@ Optional Environment Variable toggles in test suite:
 
 If you want to use RubyMine for development, a bit of extra configuration is necessary to let the IDE know about Bazel toolchain and artifacts:
 
-1. Run `bazel build @bundle//:bundle //rb:selenium-devtools //rb:selenium-webdriver` before configuring IDE. 
+1. Run `bazel build @bundle//:bundle //rb:selenium-devtools //rb:selenium-webdriver` before configuring IDE.
 2. Open `rb/` as a main project directory.
 3. In <kbd>Settings / Lanugages & Frameworks / Ruby SDK and Gems</kbd> add new <kbd>Interpreter</kbd> pointing to `../bazel-selenium/external/ruby_rules_dist/dist/bin/ruby`.
 4. In <kbd>Run / Edit Configurations... / Edit configuration templates... / RSpec</kbd> add `-I ../bazel-bin/rb/lib` to <kbd>Ruby arguments</kbd>.
@@ -289,7 +289,7 @@ cd dotnet
 dotnet test
 ```
 
-More information about running Selenium's .NET tests can be found in this [README.md](dotnet/test/README.md) 
+More information about running Selenium's .NET tests can be found in this [README.md](dotnet/test/README.md)
 
 </details>
 

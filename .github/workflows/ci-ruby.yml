@@ -230,4 +230,4 @@ jobs:
       - name: Run unit tests
         uses: ./.github/actions/bazel
         with:
-          command: test --cache_test_results=no --test_output=all //rb:unit-test
+          command: test --cache_test_results=no //rb/spec/unit/...
