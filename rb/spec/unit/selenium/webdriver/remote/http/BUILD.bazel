@@ -6,6 +6,7 @@ load("@rules_ruby//ruby:defs.bzl", "rb_test")
         srcs = [file],
         args = ["rb/spec/unit/selenium/webdriver/remote/http/" + file],
         main = "@bundle//:bin/rspec",
+        tags = ["no-sandbox"],
         deps = ["@bundle"],
     )
     for file in glob(["*_spec.rb"])

@@ -65,9 +65,9 @@ jobs:
           - 'windows-latest'
         exclude:
           - config: edge
-            os: windows-latest
+            os: ubuntu-latest
           - config: edge --config remote
-            os: windows-latest
+            os: ubuntu-latest
     steps:
       - name: Checkout source tree
         uses: actions/checkout@v3
@@ -109,7 +109,7 @@ jobs:
       - name: Set resolution
         if: matrix.os == 'windows-latest'
         run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
-      - name: Run Chrome tests
+      - name: Run tests
         uses: ./.github/actions/bazel
         with:
           command: test --config ${{ matrix.config }} --flaky_test_attempts 3 --cache_test_results=no --test_output=all rb/spec/integration/...
