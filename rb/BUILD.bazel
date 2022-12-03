@@ -63,12 +63,6 @@ copy_file(
     out = "lib/selenium/webdriver/atoms/mutationListener.js",
 )
 
-copy_file(
-    name = "selenium-server-deploy",
-    src = "//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar",
-    out = "selenium_server_deploy.jar",
-)
-
 select_file(
     name = "global-license",
     srcs = "//:license",

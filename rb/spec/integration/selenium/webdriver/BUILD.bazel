@@ -1,12 +1,20 @@
 load("@rules_ruby//ruby:defs.bzl", "rb_library", "rb_test")
+load("//common:defs.bzl", "copy_file")
 
 package(default_visibility = ["//:__subpackages__"])
+
+copy_file(
+    name = "selenium-server-deploy",
+    src = "//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar",
+    out = "selenium_server_deploy.jar",
+)
 
 rb_library(
     name = "spec_helper",
     srcs = [
         "spec_helper.rb",
         "spec_support.rb",
+        ":selenium-server-deploy",
     ] + glob(["spec_support/**/*"]),
     deps = [
         "//rb:bidi",

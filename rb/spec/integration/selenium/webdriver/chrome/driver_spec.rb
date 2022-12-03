@@ -54,9 +54,9 @@ module Selenium
         end
 
         describe 'PrintsPage' do
-          before(:all) { reset_driver!(args: ['--headless']) }
+          before { reset_driver!(args: ['--headless']) }
 
-          after(:all) { reset_driver! }
+          after { reset_driver! }
 
           let(:magic_number) { 'JVBER' }
 
@@ -87,15 +87,12 @@ module Selenium
         end
 
         describe '#logs' do
-          before(:all) do
+          before do
             reset_driver!(logging_prefs: {browser: 'ALL',
                                           driver: 'ALL',
                                           performance: 'ALL'})
+            driver.navigate.to url_for('errors.html')
           end
-
-          before { driver.navigate.to url_for('errors.html') }
-
-          after(:all) { reset_driver! }
 
           it 'can fetch available log types' do
             expect(driver.logs.available_types).to include(:performance, :browser, :driver)
