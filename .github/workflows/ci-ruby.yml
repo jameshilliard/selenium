@@ -46,27 +46,25 @@ jobs:
         with:
           command: build //rb:${{ matrix.target }}
 
-  tests:
+  integration-test:
     if: ${{ needs.check_workflow.outputs.result == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(toJson(github.event.commits), '[run ruby]') == true }}
     needs: check_workflow
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - 'chrome'
-          - 'chrome --config remote'
-          - 'edge'
-          - 'edge --config remote'
-          - 'firefox'
-          - 'firefox --config remote'
+        browser:
+          - chrome
+          - edge
+          - firefox
+        remote:
+          - false
+          - true
         os:
-          - 'ubuntu-latest'
-          - 'windows-latest'
+          - ubuntu-latest
+          - windows-latest
         exclude:
-          - config: edge
-            os: ubuntu-latest
-          - config: edge --config remote
+          - browser: edge
             os: ubuntu-latest
     steps:
       - name: Checkout source tree
@@ -80,22 +78,22 @@ jobs:
         uses: ./.github/actions/cache-bazel
         with:
           workflow: ruby
-          key: tests
+          key: ${{ matrix.browser }}-remote-${{ matrix.remote }}
       - name: Setup Fluxbox
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get -y install fluxbox
       - name: Setup Chrome
-        if: contains(matrix.config, 'chrome')
+        if: matrix.browser == 'chrome'
         uses: browser-actions/setup-chrome@latest
         with:
           chrome-version: stable
       - name: Setup Edge
-        if: contains(matrix.config, 'edge')
+        if: matrix.browser == 'edge'
         uses: browser-actions/setup-edge@latest
         with:
           edge-version: stable
       - name: Setup Firefox
-        if: contains(matrix.config, 'firefox')
+        if: matrix.browser == 'firefox'
         uses: abhi1693/setup-browser@v0.3.4
         with:
           browser: firefox
@@ -112,7 +110,14 @@ jobs:
       - name: Run tests
         uses: ./.github/actions/bazel
         with:
-          command: test --config ${{ matrix.config }} --flaky_test_attempts 3 --cache_test_results=no --test_output=all rb/spec/integration/...
+          command: >
+            test
+            --cache_test_results=no
+            --define browser=${{ matrix.browser }}
+            --define remote=${{ matrix.remote }}
+            --flaky_test_attempts 3
+            --test_output=all
+            rb/spec/integration/...
         env:
           DISPLAY: :99
 

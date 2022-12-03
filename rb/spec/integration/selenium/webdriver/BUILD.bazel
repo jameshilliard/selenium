@@ -1,32 +1,41 @@
 load("@rules_ruby//ruby:defs.bzl", "rb_library", "rb_test")
-load("//common:defs.bzl", "copy_file")
+load("//rb/spec/integration:configuration.bzl", "ENV", "TAGS")
 
 package(default_visibility = ["//:__subpackages__"])
 
-copy_file(
-    name = "selenium-server-deploy",
-    src = "//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar",
-    out = "selenium_server_deploy.jar",
-)
-
 rb_library(
     name = "spec_helper",
-    srcs = [
+    srcs = glob([
         "spec_helper.rb",
         "spec_support.rb",
-        ":selenium-server-deploy",
-    ] + glob(["spec_support/**/*"]),
+        "spec_support/**/*",
+    ]) + select({
+        "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
+        "//conditions:default": [],
+    }),
     deps = [
-        "//rb:bidi",
-        "//rb:chrome",
         "//rb:common",
-        "//rb:devtools",
-        "//rb:edge",
-        "//rb:firefox",
-        "//rb:ie",
         "//rb:remote",
-        "//rb:safari",
-    ],
+    ] + select({
+        "//rb/spec/integration:chrome": [
+            "//rb:bidi",
+            "//rb:chrome",
+            "//rb:devtools",
+        ],
+        "//rb/spec/integration:edge": [
+            "//rb:bidi",
+            "//rb:devtools",
+            "//rb:edge",
+        ],
+        "//rb/spec/integration:firefox": [
+            "//rb:bidi",
+            "//rb:devtools",
+            "//rb:firefox",
+        ],
+        "//rb/spec/integration:ie": ["//rb:ie"],
+        "//rb/spec/integration:safari": ["//rb:safari"],
+        "//conditions:default": [],
+    }),
 )
 
 [
@@ -34,8 +43,9 @@ rb_library(
         name = file[:-8],
         srcs = [file],
         args = ["rb/spec/integration/selenium/webdriver/" + file],
+        env = ENV,
         main = "@bundle//:bin/rspec",
-        tags = ["no-sandbox"],
+        tags = TAGS,
         deps = [
             ":spec_helper",
             "@bundle",
