@@ -206,41 +206,41 @@ twine upload bazel-bin/py/selenium-*.whl
 
 Build targets:
 
-| Command                                   | Description                                       |
-|-------------------------------------------|---------------------------------------------------|
-| bazel build //rb:selenium-devtools        | Build selenium-devtools Ruby gem                  |
-| bazel build //rb:selenium-webdriver       | Build selenium-webdriver Ruby gem                 |
-| bazel run //rb:selenium-devtools-release  | Build and push selenium-devtools gem to RubyGems  |
-| bazel run //rb:selenium-webdriver-release | Build and push selenium-webdriver gem to RubyGems |
-| bazel run //rb:console                    | Start Pry REPL with all gems loaded               |
-| bazel run //rb:docs                       | Generate YARD docs                                |
-| bazel run //rb:lint                       | Run RuboCop linter                                |
+| Command                                     | Description                                       |
+|---------------------------------------------|---------------------------------------------------|
+| `bazel build //rb:selenium-devtools`        | Build selenium-devtools Ruby gem                  |
+| `bazel build //rb:selenium-webdriver`       | Build selenium-webdriver Ruby gem                 |
+| `bazel run //rb:selenium-devtools-release`  | Build and push selenium-devtools gem to RubyGems  |
+| `bazel run //rb:selenium-webdriver-release` | Build and push selenium-webdriver gem to RubyGems |
+| `bazel run //rb:console`                    | Start Pry REPL with all gems loaded               |
+| `bazel run //rb:docs`                       | Generate YARD docs                                |
+| `bazel run //rb:lint`                       | Run RuboCop linter                                |
 
 Test targets:
 
-| Command                                                                            | Description                                             |
-|------------------------------------------------------------------------------------|---------------------------------------------------------|
-| bazel test //rb/spec/...                                                           | Run both unit and integration tests using Chrome        |
-| bazel test //rb/spec/integration/...                                               | Run integration tests using Chrome                      |
-| bazel test //rb/spec/integration/... --define browser=firefox                      | Run integration tests using Firefox                     |
-| bazel test //rb/spec/integration/... --define remote=true                          | Run integration tests using Chrome and Selenium Server  |
-| bazel test //rb/spec/integration/... --define browser=firefox --define remote=true | Run integration tests using Firefox and Selenium Server |
-| bazel test //rb/spec/unit/...                                                      | Run unit tests                                          |
+| Command                                                                              | Description                                             |
+|--------------------------------------------------------------------------------------|---------------------------------------------------------|
+| `bazel test //rb/spec/...`                                                           | Run both unit and integration tests using Chrome        |
+| `bazel test //rb/spec/integration/...`                                               | Run integration tests using Chrome                      |
+| `bazel test //rb/spec/integration/... --define browser=firefox`                      | Run integration tests using Firefox                     |
+| `bazel test //rb/spec/integration/... --define remote=true`                          | Run integration tests using Chrome and Selenium Server  |
+| `bazel test //rb/spec/integration/... --define browser=firefox --define remote=true` | Run integration tests using Firefox and Selenium Server |
+| `bazel test //rb/spec/unit/...`                                                      | Run unit tests                                          |
 
 Suffix `...` tells Bazel to run all the test targets. They are conveniently named by test file name with `_spec.rb` removed so you can run them individually:
 
-| Test file                                                    | Test target                                            |
-|--------------------------------------------------------------|--------------------------------------------------------|
-| rb/spec/integration/selenium/webdriver/chrome/driver_spec.rb | //rb/spec/integration/selenium/webdriver/chrome:driver |
-| rb/spec/integration/selenium/webdriver/chrome/driver_spec.rb | //rb/spec/integration/selenium/webdriver/chrome:driver |
+| Test file                                                      | Test target                                              |
+|----------------------------------------------------------------|----------------------------------------------------------|
+| `rb/spec/integration/selenium/webdriver/chrome/driver_spec.rb` | `//rb/spec/integration/selenium/webdriver/chrome:driver` |
+| `rb/spec/integration/selenium/webdriver/chrome/driver_spec.rb` | `//rb/spec/integration/selenium/webdriver/chrome:driver` |
 
 Supported browsers:
 
-* chrome
-* edge
-* firefox
-* ie
-* safari (cannot be run in parallel - use `--test_strategy=exclusive` )
+* `chrome`
+* `edge`
+* `firefox`
+* `ie`
+* `safari` (cannot be run in parallel - use `--test_strategy=exclusive` )
 
 Useful command line options:
 
