@@ -37,7 +37,8 @@ ENV = select({
     "//conditions:default": {},
 })
 
-# We have to use no-sandbox at the moment because Firefox crashes
-# when run under sandbox: https://bugzilla.mozilla.org/show_bug.cgi?id=1382498.
-# For Chromium-based browser, we can just pass `--no-sandbox` flag.
-TAGS = ["no-sandbox"]
+TAGS = select({
+    "//rb/spec/integration:firefox": ["no-sandbox"],  # https://bugzilla.mozilla.org/show_bug.cgi?id=1382498
+    "//rb/spec/integration:safari": ["exclusive"],  # SafariDriver doesn't support parallelism
+    "//conditions:default": [],
+})
