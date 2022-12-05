@@ -50,6 +50,7 @@ jobs:
     if: ${{ needs.check_workflow.outputs.result == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(toJson(github.event.commits), '[run ruby]') == true }}
     needs: check_workflow
     runs-on: ${{ matrix.os }}
+    name: ${{ format('{0}-test ({1}, {2})', matrix.browser, matrix.remote && 'remote' || '', matrix.os) }}
     strategy:
       fail-fast: false
       matrix:
@@ -116,7 +117,6 @@ jobs:
             --define browser=${{ matrix.browser }}
             --define remote=${{ matrix.remote }}
             --flaky_test_attempts 3
-            --test_output=all
             rb/spec/integration/...
         env:
           DISPLAY: :99
