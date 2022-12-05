@@ -240,18 +240,18 @@ Supported browsers:
 * `edge`
 * `firefox`
 * `ie`
-* `safari` (cannot be run in parallel - use `--test_strategy=exclusive` )
+* `safari` (cannot be run in parallel - use `--local_test_jobs 1`)
 
 Useful command line options:
 
 * `--flaky_test_attempts 3` - re-run failed tests up to 3 times
+* `--local_test_jobs 1` - control parallelism of tests
 * `--no-cache_test_results`, `-t-` - disable caching of test results and re-runs all of them
 * `--test_arg "-tfocus"` - test only [focused specs](https://relishapp.com/rspec/rspec-core/v/3-12/docs/filtering/inclusion-filters)
 * `--test_arg "-eTimeouts"` - test only specs which name include "Timeouts"
 * `--test_env FOO=bar` - pass extra environment variable to test process (see below for supported variables)
-* `--test_output=all` - print all output from the tests, not just errors
-* `--test_output=streamed` - run all tests one by one and print its output immediately
-* `--test_strategy=exclusive` - disable tests parallelism
+* `--test_output all` - print all output from the tests, not just errors
+* `--test_output streamed` - run all tests one by one and print its output immediately
 
 Supported environment variables:
 
