@@ -1,83 +1,32 @@
 package(default_visibility = ["//:__subpackages__"])
 
-config_setting(
-    name = "chrome",
-    define_values = {
-        "browser": "chrome",
-    },
-)
+BROWSERS = [
+    "chrome",
+    "edge",
+    "firefox",
+    "ie",
+    "safari",
+]
 
-config_setting(
-    name = "edge",
-    define_values = {
-        "browser": "edge",
-    },
-)
+[
+    config_setting(
+        name = browser,
+        testonly = True,
+        define_values = {
+            "browser": browser,
+        },
+    )
+    for browser in BROWSERS
+]
 
-config_setting(
-    name = "firefox",
-    define_values = {
-        "browser": "firefox",
-    },
-)
-
-config_setting(
-    name = "ie",
-    define_values = {
-        "browser": "ie",
-    },
-)
-
-config_setting(
-    name = "safari",
-    define_values = {
-        "browser": "safari",
-    },
-)
-
-config_setting(
-    name = "remote",
-    define_values = {
-        "remote": "true",
-    },
-)
-
-config_setting(
-    name = "remote-chrome",
-    define_values = {
-        "browser": "chrome",
-        "remote": "true",
-    },
-)
-
-config_setting(
-    name = "remote-edge",
-    define_values = {
-        "browser": "edge",
-        "remote": "true",
-    },
-)
-
-config_setting(
-    name = "remote-firefox",
-    define_values = {
-        "browser": "firefox",
-        "remote": "true",
-    },
-)
-
-config_setting(
-    name = "remote-ie",
-    define_values = {
-        "browser": "ie",
-        "remote": "true",
-    },
-)
-
-config_setting(
-    name = "remote-safari",
-    define_values = {
-        "browser": "safari",
-        "remote": "true",
-    },
-)
+[
+    config_setting(
+        name = "remote-" + browser,
+        testonly = True,
+        define_values = {
+            "browser": browser,
+            "remote": "true",
+        },
+    )
+    for browser in BROWSERS
+]
