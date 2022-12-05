@@ -240,7 +240,7 @@ Supported browsers:
 * `edge`
 * `firefox`
 * `ie`
-* `safari`
+* `safari` (cannot be run in parallel - use `--test_strategy=exclusive` )
 
 Useful command line options:
 

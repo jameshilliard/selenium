@@ -213,7 +213,6 @@ module Selenium
         def chrome_options(**opts)
           opts[:binary] ||= ENV['CHROME_BINARY'] if ENV.key?('CHROME_BINARY')
           opts[:args] << '--headless=chrome' if ENV['HEADLESS']
-          opts[:args] << '--no-sandbox' if ENV['TEST_TARGET']
           WebDriver::Options.chrome(**opts)
         end
 
@@ -227,7 +226,6 @@ module Selenium
         def edge_options(**opts)
           opts[:binary] ||= ENV['EDGE_BINARY'] if ENV.key?('EDGE_BINARY')
           opts[:args] << '--headless=chrome' if ENV['HEADLESS']
-          opts[:args] << '--no-sandbox' if ENV['TEST_TARGET']
           WebDriver::Options.edge(**opts)
         end
 
