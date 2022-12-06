@@ -68,13 +68,18 @@ module Selenium
         end
 
         def app_server
-          @app_server ||= RackServer.new(root.join('common/src/web').to_s).tap(&:start)
+          @app_server ||= begin
+            app_server = RackServer.new(root.join('common/src/web').to_s, random_port)
+            app_server.start
+
+            app_server
+          end
         end
 
         def remote_server
           @remote_server ||= Selenium::Server.new(
             remote_server_jar,
-            port: PortProber.above(4444),
+            port: random_port,
             log_level: WebDriver.logger.debug? && 'FINE',
             background: true,
             timeout: 60
@@ -108,7 +113,7 @@ module Selenium
         end
 
         def quit
-          app_server.stop
+          @app_server&.stop
 
           @remote_server&.stop
 
@@ -236,6 +241,17 @@ module Selenium
 
         def safari_preview_driver(**opts)
           WebDriver::Driver.for(:safari, **opts)
+        end
+
+        def random_port
+          addr = Socket.getaddrinfo(Platform.localhost, 0, Socket::AF_INET, Socket::SOCK_STREAM)
+          addr = Socket.pack_sockaddr_in(0, addr[0][3])
+          sock = Socket.new(Socket::AF_INET, Socket::SOCK_STREAM, 0)
+          sock.bind(addr)
+
+          sock.local_address.ip_port
+        ensure
+          sock.close
         end
       end
     end # SpecSupport
